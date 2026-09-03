@@ -40,7 +40,7 @@ def run_one(n, mode, tau, p0_hat, window=20, T=400, warmup=60, seed=0):
     return np.mean(costs)
 
 
-def main():
+def main(n_seeds=1):
     ns = [10, 20, 50, 100, 200]
     _, _, p0_hat = calibrate_threshold(n_calib=100, seed=1)
     tau, _ = calibrate_smoothed_threshold(p0_hat, n_calib=100, window=20,
@@ -49,16 +49,25 @@ def main():
 
     for mode, label in [("bounded_degree", "degre borne"),
                          ("constant_density", "densite constante")]:
-        costs = []
-        for n in ns:
-            c = run_one(n, mode, tau, p0_hat, seed=42)
-            costs.append(c)
-            print(f"  {label:20s} n={n:4d}  cout moyen={c:.2f}")
-        log_n = np.log(ns)
-        log_c = np.log(np.maximum(costs, 1e-6))
-        slope, intercept = np.polyfit(log_n, log_c, 1)
-        print(f"{label} : pente log-log = {slope:.3f}\n")
+        slopes = []
+        for s in range(n_seeds):
+            costs = [run_one(n, mode, tau, p0_hat, seed=42 + s) for n in ns]
+            log_n = np.log(ns)
+            log_c = np.log(np.maximum(costs, 1e-6))
+            slope, intercept = np.polyfit(log_n, log_c, 1)
+            slopes.append(slope)
+            if n_seeds == 1:
+                for n, c in zip(ns, costs):
+                    print(f"  {label:20s} n={n:4d}  cout moyen={c:.2f}")
+        slopes = np.array(slopes)
+        if n_seeds > 1:
+            print(f"{label} : pente log-log = {slopes.mean():.3f} +/- {slopes.std():.3f} "
+                  f"({n_seeds} graines, seeds=42..{41+n_seeds})")
+        else:
+            print(f"{label} : pente log-log = {slopes[0]:.3f}  "
+                  f"(graine unique, seed=42 -- voir README.md pour la variance "
+                  f"inter-graines : appeler main(n_seeds=N) pour une moyenne)\n")
 
 
 if __name__ == "__main__":
-    main()
+    main(n_seeds=1)

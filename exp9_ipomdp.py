@@ -122,7 +122,41 @@ def run(ns=(10, 20, 50, 100), n_coalition_members=4, frac_coalition_of_pop=None,
 
         print(f"{n:5d} {np.mean(peg_utils):12.3f} {np.mean(ipomdp_utils):16.3f} "
               f"{enumeration_cost_estimate(n):24.3e}")
+        if n == n_coalition_members * 4 or n == 18:
+            last_n18 = (np.mean(peg_utils), np.mean(ipomdp_utils))
+    return locals().get("last_n18")
+
+
+def run_headline_n18(n_seeds=10, **kwargs):
+    """Boucle sur n_seeds graines a n=18 (protocole corrige, membres de
+    coalition en nombre absolu suffisant) -- reproduit la comparaison
+    chiffree du papier (Section 7.9, Resultat 1bis). Le nombre exact de
+    graines utilise dans les simulations originales n'est pas precise dans
+    le texte du papier ; 10 est la valeur par defaut de la Section 6
+    ("typiquement 5 a 10 graines")."""
+    peg_utils, ipomdp_utils = [], []
+    for s in range(n_seeds):
+        print(f"\n--- graine {s} (n=18) ---")
+        out = run(ns=(18,), seed=s, **kwargs)
+        if out is not None:
+            peg_u, ipomdp_u = out
+            peg_utils.append(peg_u)
+            ipomdp_utils.append(ipomdp_u)
+    peg_utils = np.array(peg_utils)
+    ipomdp_utils = np.array(ipomdp_utils)
+    print(f"\n=== Agrege sur {n_seeds} graines (seeds=0..{n_seeds-1}), n=18 ===")
+    print(f"PEG     : {peg_utils.mean():.3f} +/- {peg_utils.std():.3f}")
+    print(f"I-POMDP : {ipomdp_utils.mean():.3f} +/- {ipomdp_utils.std():.3f}")
+    if peg_utils.std() > 0 or ipomdp_utils.std() > 0:
+        from scipy.stats import ttest_ind
+        t_stat, p_val = ttest_ind(peg_utils, ipomdp_utils)
+        diff = peg_utils.mean() - ipomdp_utils.mean()
+        pooled_std = np.sqrt((peg_utils.std()**2 + ipomdp_utils.std()**2) / 2)
+        d_cohen = diff / pooled_std if pooled_std > 0 else float("nan")
+        print(f"t={t_stat:.3f}  p={p_val:.3f}  d de Cohen={d_cohen:.2f}")
+    return peg_utils, ipomdp_utils
 
 
 if __name__ == "__main__":
     run()
+    run_headline_n18(n_seeds=10)

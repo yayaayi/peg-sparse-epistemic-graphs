@@ -62,12 +62,36 @@ def run(n=80, frac_adv=0.10, frac_coalition=0.10, seed=0,
                 hits_full[label] += 1
 
     print(f"n={n}  {len(isolated)} adversaires isoles, {len(coalition)} en coalition\n")
+    out = {}
     for label in ["isolated", "coalition"]:
         r_so = hits_surprise_only[label] / n_eval
         r_full = hits_full[label] / n_eval
         print(f"  {label:10s} : rappel surprise seule = {r_so:.3f}   "
               f"rappel PEG complet = {r_full:.3f}")
+        out[label] = (r_so, r_full)
+    return out
+
+
+def run_multi_seed(n_seeds=5, **kwargs):
+    """Boucle sur n_seeds graines -- reproduit la statistique agregee du
+    papier (Section 7.6, ablation coalition : N=5 graines)."""
+    all_results = {"isolated": {"so": [], "full": []},
+                    "coalition": {"so": [], "full": []}}
+    for s in range(n_seeds):
+        print(f"\n--- graine {s} ---")
+        out = run(seed=s, **kwargs)
+        for label in ["isolated", "coalition"]:
+            r_so, r_full = out[label]
+            all_results[label]["so"].append(r_so)
+            all_results[label]["full"].append(r_full)
+    print(f"\n=== Agrege sur {n_seeds} graines (seeds=0..{n_seeds-1}) ===")
+    for label in ["isolated", "coalition"]:
+        so = np.array(all_results[label]["so"])
+        full = np.array(all_results[label]["full"])
+        print(f"  {label:10s} : rappel surprise seule = {so.mean():.3f}+/-{so.std():.3f}   "
+              f"rappel PEG complet = {full.mean():.3f}+/-{full.std():.3f}")
+    return all_results
 
 
 if __name__ == "__main__":
-    run()
+    run_multi_seed(n_seeds=5)

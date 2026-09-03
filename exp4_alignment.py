@@ -81,7 +81,26 @@ def run(n=100, frac_adv=0.15, T=400, warmup=60, seed=0):
     contrib_at_low_surprise = np.array(contributions)[zero_surprise_mask]
     print(f"Contribution marginale moyenne au 15e percentile de surprise "
           f"le plus bas : {contrib_at_low_surprise.mean():.3f}")
+    return rho, pval, contrib_at_low_surprise.mean()
+
+
+def run_multi_seed(n_seeds=5, **kwargs):
+    """Boucle sur n_seeds graines independantes -- reproduit la statistique
+    inter-graines du papier (Section 7.4, Conjecture 2 : N=5 graines,
+    rho=0,617+/-0,005 rapporte)."""
+    rhos, low_surprise_contribs = [], []
+    for s in range(n_seeds):
+        print(f"\n--- graine {s} ---")
+        rho, _, low_contrib = run(seed=s, **kwargs)
+        rhos.append(rho)
+        low_surprise_contribs.append(low_contrib)
+    rhos = np.array(rhos)
+    print(f"\n=== Agrege sur {n_seeds} graines (seeds=0..{n_seeds-1}) ===")
+    print(f"rho de Spearman : {rhos.mean():.3f} +/- {rhos.std():.3f}")
+    print(f"Contribution marginale (bas percentile), toutes graines : "
+          f"{np.mean(low_surprise_contribs):.3f}")
+    return rhos
 
 
 if __name__ == "__main__":
-    run()
+    run_multi_seed(n_seeds=5)

@@ -148,14 +148,25 @@ def run_variant(n_predators=8, n_prey=16, map_size=20, T=250, synchronized=False
     return recall, fpr, rho_mean
 
 
-def main():
+def main(n_seeds=1):
     print("Experience 10 -- MAgent2 (adversarial_pursuit)\n")
     for sync, label in [(False, "agressifs non synchronises"),
                          (True, "agressifs synchronises")]:
-        recall, fpr, rho = run_variant(synchronized=sync, seed=3)
-        print(f"{label:30s} rappel(activation)={recall:.3f}  "
-              f"FPR(passifs)={fpr:.3f}  correlation(agressif-agressif)={rho:.3f}")
+        recalls, fprs, rhos = [], [], []
+        for s in range(n_seeds):
+            recall, fpr, rho = run_variant(synchronized=sync, seed=3 + s)
+            recalls.append(recall); fprs.append(fpr); rhos.append(rho)
+        recalls, fprs, rhos = np.array(recalls), np.array(fprs), np.array(rhos)
+        if n_seeds > 1:
+            print(f"{label:30s} rappel(activation)={recalls.mean():.3f}+/-{recalls.std():.3f}  "
+                  f"FPR(passifs)={fprs.mean():.3f}+/-{fprs.std():.3f}  "
+                  f"correlation(agressif-agressif)={rhos.mean():.3f}+/-{rhos.std():.3f}  "
+                  f"({n_seeds} graines, seeds=3..{2+n_seeds})")
+        else:
+            print(f"{label:30s} rappel(activation)={recalls[0]:.3f}  "
+                  f"FPR(passifs)={fprs[0]:.3f}  correlation(agressif-agressif)={rhos[0]:.3f}  "
+                  f"(graine unique, seed=3)")
 
 
 if __name__ == "__main__":
-    main()
+    main(n_seeds=1)

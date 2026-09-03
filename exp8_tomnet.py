@@ -156,11 +156,31 @@ def run(n_train=100, n_test=100, frac_adv=0.15, window=20, T=400, warmup=60,
     print(f"n={n_test}  seuil de decision implicite calibre = {best_thr:.2f}")
     print(f"Utilite moyenne PEG           : {np.mean(peg_utils):.3f} +/- {np.std(peg_utils):.3f}")
     print(f"Utilite moyenne modele implicite : {np.mean(implicit_utils):.3f} +/- {np.std(implicit_utils):.3f}")
+    return np.mean(peg_utils), np.mean(implicit_utils)
 
-    # rappel specifique sur les membres de coalition, si presents (aucun ici :
-    # cette experience porte sur des adversaires isoles uniquement, conforme
-    # au protocole du papier pour cette comparaison)
+
+def run_multi_seed(n_seeds=5, **kwargs):
+    """Boucle sur n_seeds graines -- le papier ne precise pas de compte de
+    graines specifique pour cette experience (Section 7.8) ; 5 est la borne
+    basse de la valeur par defaut de la Section 6 ("typiquement 5 a 10
+    graines")."""
+    peg_means, implicit_means = [], []
+    for s in range(n_seeds):
+        print(f"\n--- graine {s} ---")
+        peg_u, imp_u = run(seed=s, **kwargs)
+        peg_means.append(peg_u)
+        implicit_means.append(imp_u)
+    peg_means = np.array(peg_means)
+    implicit_means = np.array(implicit_means)
+    print(f"\n=== Agrege sur {n_seeds} graines (seeds=0..{n_seeds-1}) ===")
+    print(f"PEG              : {peg_means.mean():.3f} +/- {peg_means.std():.3f}")
+    print(f"Modele implicite : {implicit_means.mean():.3f} +/- {implicit_means.std():.3f}")
+    if n_seeds > 1:
+        from scipy.stats import ttest_rel
+        t_stat, p_val = ttest_rel(peg_means, implicit_means)
+        print(f"t={t_stat:.3f}  p={p_val:.3f} (test apparie, memes graines)")
+    return peg_means, implicit_means
 
 
 if __name__ == "__main__":
-    run()
+    run_multi_seed(n_seeds=5)

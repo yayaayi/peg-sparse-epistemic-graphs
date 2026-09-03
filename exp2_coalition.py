@@ -79,7 +79,25 @@ def run(n=60, frac_adv=0.08, frac_coalition=0.12, window=25, T=400,
         if f1 > best_f1:
             best_f1, best_rm = f1, rm
     print(f"\nMeilleur F1={best_f1:.3f} atteint a rho_min={best_rm:.2f}")
+    return best_f1, best_rm
+
+
+def run_multi_seed(n_seeds=5, **kwargs):
+    """Boucle sur n_seeds graines (0..n_seeds-1), agrege moyenne +/- ecart-type
+    du F1 optimal -- reproduit directement le chiffre rapporte dans le papier
+    (Section 7.2 : F1=1.00 a rho_min~=0.30, N=5 graines)."""
+    f1s, rms = [], []
+    for s in range(n_seeds):
+        print(f"\n--- graine {s} ---")
+        f1, rm = run(seed=s, **kwargs)
+        f1s.append(f1)
+        rms.append(rm)
+    f1s = np.array(f1s)
+    print(f"\n=== Agrege sur {n_seeds} graines (seeds=0..{n_seeds-1}) ===")
+    print(f"F1 optimal : {f1s.mean():.3f} +/- {f1s.std():.3f}")
+    print(f"rho_min optimal (mode) : {max(set(rms), key=rms.count):.2f}")
+    return f1s
 
 
 if __name__ == "__main__":
-    run()
+    run_multi_seed(n_seeds=5)

@@ -44,7 +44,7 @@ def belief_update_sequence(observations, prior_alpha=1.0, prior_beta=1.0,
     return residuals, beliefs
 
 
-def run(n_pairs=80, obs_per_pair=12, seed=0):
+def run(n_pairs=80, obs_per_pair=12, seed=0, verbose=True):
     rng = np.random.default_rng(seed)
     all_residuals = []
 
@@ -62,14 +62,32 @@ def run(n_pairs=80, obs_per_pair=12, seed=0):
 
     d_axis = np.arange(1, len(mean_by_d) + 1)
     valid = np.array(mean_by_d) > 1e-9
+    beta_hat = None
     if valid.sum() >= 2:
         slope, intercept = np.polyfit(d_axis[valid], np.log(np.array(mean_by_d)[valid]), 1)
         beta_hat = np.exp(slope)
-        print(f"Decroissance geometrique estimee : beta_hat = {beta_hat:.3f} "
-              f"(Conjecture 1 attend 0 < beta < 1)")
-    for d, m in zip(d_axis, mean_by_d):
-        print(f"  d={d:2d}  surprise residuelle moyenne = {m:.4f}")
+        if verbose:
+            print(f"Decroissance geometrique estimee : beta_hat = {beta_hat:.3f} "
+                  f"(Conjecture 1 attend 0 < beta < 1)")
+    if verbose:
+        for d, m in zip(d_axis, mean_by_d):
+            print(f"  d={d:2d}  surprise residuelle moyenne = {m:.4f}")
+    return beta_hat
+
+
+def run_multi_seed(n_seeds=5, **kwargs):
+    """Boucle sur n_seeds graines (0..n_seeds-1) -- reproduit la statistique
+    agregee du papier (Section 7.3, Conjecture 1 : N=5 graines)."""
+    betas = []
+    for s in range(n_seeds):
+        b = run(seed=s, verbose=False, **kwargs)
+        if b is not None:
+            betas.append(b)
+    betas = np.array(betas)
+    print(f"=== Agrege sur {n_seeds} graines (seeds=0..{n_seeds-1}) ===")
+    print(f"beta_hat : {betas.mean():.3f} +/- {betas.std():.3f}")
+    return betas
 
 
 if __name__ == "__main__":
-    run()
+    run_multi_seed(n_seeds=5)
