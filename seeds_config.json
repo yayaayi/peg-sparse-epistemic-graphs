@@ -1,0 +1,131 @@
+{
+  "_comment": "Graines exactes utilisees par defaut dans chaque script de experiments/. Chaque graine est un entier passe a numpy.random.default_rng ou equivalent ; les graines sont deterministes (seed=k pour la k-ieme repetition), pas tirees aleatoirement, donc entierement reproductibles a partir des bornes indiquees ici sans fichier de valeurs supplementaire.",
+  "exp1_scalability.py": {
+    "fonction": "main(n_seeds=N)",
+    "graines_par_defaut": "seed=42 (N=1, graine unique -- correspond au chiffre rapporte dans le papier)",
+    "graines_multi": "seeds=42..41+N si appele avec n_seeds=N>1",
+    "note": "Variance inter-graines non caracterisee dans le papier original ; verifiee ici sur 10 graines pendant la preparation de cette archive (pente degre borne : 1.076+/-0.358, plus variable que le point unique 0.95 rapporte)."
+  },
+  "exp2_coalition.py": {
+    "fonction": "run_multi_seed(n_seeds=5)",
+    "graines": "seeds=0..4",
+    "correspond_au_papier": "Section 7.2, N=5 graines indépendantes"
+  },
+  "exp3_depth.py": {
+    "fonction": "run_multi_seed(n_seeds=5)",
+    "graines": "seeds=0..4",
+    "correspond_au_papier": "Section 7.3, N=5 graines"
+  },
+  "exp4_alignment.py": {
+    "fonction": "run_multi_seed(n_seeds=5)",
+    "graines": "seeds=0..4",
+    "correspond_au_papier": "Section 7.4, N=5 graines indépendantes"
+  },
+  "exp5_baseline.py": {
+    "fonction": "run(seeds=range(5))",
+    "graines": "seeds=0..4",
+    "correspond_au_papier": "Section 7.5, N=5 graines par point (deja bouclee nativement dans le script d'origine)"
+  },
+  "exp6_ablation.py": {
+    "fonction": "run_multi_seed(n_seeds=5)",
+    "graines": "seeds=0..4",
+    "correspond_au_papier": "Section 7.6, N=5 graines"
+  },
+  "exp7_cross_env.py": {
+    "fonction": "run()",
+    "graines_par_defaut": "seed=42 par sous-experience (graine unique)",
+    "note": "Reproduit les Experiences 1/2/4 sur un second environnement ; le papier rapporte un resultat qualitatif (repetition coherente), pas de statistique inter-graines nouvelle pour cette section."
+  },
+  "exp8_tomnet.py": {
+    "fonction": "run_multi_seed(n_seeds=5)",
+    "graines": "seeds=0..4",
+    "note": "Le papier ne precise pas de compte de graines explicite pour cette section (7.8) ; 5 est la borne basse de la valeur par defaut de la Section 6 du papier."
+  },
+  "exp9_ipomdp.py": {
+    "fonction_sweep": "run() -- graine unique seed=0, balayage de n (tableau complet)",
+    "fonction_headline": "run_headline_n18(n_seeds=10)",
+    "graines_headline": "seeds=0..9, n=18 fixe (protocole corrige)",
+    "note": "Le nombre exact de graines des simulations originales n'est pas precise dans le texte du papier ; 10 est la valeur par defaut de la Section 6. Voir README.md Note 1 : cette reconstruction ne reproduit PAS les valeurs chiffrees rapportees dans le papier pour cette comparaison (ecart de meme nature que les Experiences 2/6)."
+  },
+  "exp10_magent2.py": {
+    "fonction": "main(n_seeds=N)",
+    "graines_par_defaut": "seed=3 (N=1, graine unique)",
+    "graines_multi": "seeds=3..2+N si appele avec n_seeds=N>1",
+    "note": "Corrige suite a une revue externe : l'ancienne heuristique de seuil (tau_local = -log(1-p0)*1.5) a ete remplacee par la vraie calibration par quantile (Definition 4bis, via calibrate_smoothed_threshold), sans necessiter de re-simulation MAgent2. Resultat : FPR sur les passifs ramene de 62-65% a 18-19%. Correlation sous synchronisation inchangee (0.27), limite distincte non resolue par cette correction."
+  },
+  "exp11_burst_decision.py": {
+    "fonctions": "run_synchronized(n_reps=10), run_desync_robustness(n_reps=10)",
+    "graines": "seed=rep pour rep in range(10), soit seeds=0..9",
+    "correspond_au_papier": "Section 7.11, N=10 graines indépendantes (deja bouclee nativement)"
+  },
+  "exp12_sensitivity_adversarial.py": {
+    "fonctions": "sensitivity_sweep(seed=0), adversarial_evasion(seed=0)",
+    "graines_par_defaut": "seed=0 (graine unique par balayage de valeur d'hyperparametre)",
+    "note": "Le papier rapporte des valeurs ponctuelles par palier d'hyperparametre (pas de +/- inter-graines) pour cette section ; correspond a la structure du script."
+  },
+  "exp_k2_genuine_inference.py": {
+    "fonction": "__main__ : [run(seed=s) for s in range(20)]",
+    "graines": "seeds=0..19",
+    "correspond_au_papier": "Section 7.12bis, N=20 graines indépendantes"
+  },
+  "exp_k2_camouflage.py": {
+    "statut": "Version heuristique anterieure, superseded par exp_k2_genuine_inference.py -- conservee pour reference/comparaison uniquement, non utilisee pour les chiffres du papier."
+  },
+  "exp2bis_confusion.py": {
+    "fonction": "run_multi_seed(n_seeds=8)",
+    "graines": "seeds=0..7",
+    "correspond_au_papier": "Section 7.2bis, N=8 graines",
+    "note": "Nouveau ce cycle -- ce test n'avait auparavant aucun script correspondant dans le depot ; ses chiffres n'avaient jamais ete verifies avant cette campagne."
+  },
+  "exp11_full.py": {
+    "fonction": "run_multi_seed(n_seeds=10)",
+    "graines": "seeds=0..9",
+    "correspond_au_papier": "Section 7.11, N=10 graines, calcule desormais l'ensemble complet des metriques (rappel coalition, rappel isole, FPR, utilite) que le texte du papier decrit -- exp11_burst_decision.py original ne calculait qu'une comparaison d'utilite simplifiee."
+  },
+  "run_all.py": {
+    "role": "Script maitre : execute toutes les experiences ci-dessus avec les graines documentees ici, ecrit results_all.json a la racine du depot.",
+    "note": "C'est ce script (et une verification independante de chaque chiffre surprenant, en appelant les fonctions directement) qui a produit tous les chiffres actuellement cites dans le texte du papier, Section 7."
+  },
+  "exp5_baseline_bayes_optimal.py": {
+    "fonction": "run(ns=(20,50,100,150,200), seeds=range(5))",
+    "graines": "seeds=0..4 (memes que exp5_baseline.py, pour comparaison directe)",
+    "correspond_au_papier": "Section 7.5, troisieme implementation independante -- seuil bayesien optimal p > 50/63 ~= 0.794, derive des poids de la fonction d'utilite (reward_tp=10, penalty_fp=-50, penalty_fn=-3), au lieu d'un seuil arbitraire (0.5) ou d'une regle buguee.",
+    "note": "Resultat definitif : PEG et la baseline exhaustive obtiennent une utilite identique au bit pres, aux 5 tailles de population -- clot la question ouverte par les deux implementations precedentes (77% puis 110%)."
+  },
+  "exp2ter_burst_correlation.py": {
+    "fonction": "run_multi_seed(n_seeds=8)",
+    "graines": "seeds=0..7",
+    "correspond_au_papier": "Section 7.2ter, tentative de recalibration de la detection de coalition par correlation conditionnee aux fenetres de rafale de population (meme principe que la correction reussie en 7.11).",
+    "note": "Tentative honnete, resultat en demi-teinte : rappel ameliore (48.8%+/-7.8% vs ~30%) mais precision degradee davantage (22.6%+/-6.4% vs ~50%), F1 optimal legerement INFERIEUR a la version non conditionnee (0.299+/-0.041 vs 0.353+/-0.044). Le critere de refutation reste declenche. Documente comme un echec partiel, pas force vers un succes."
+  },
+  "exp5_penalty_sensitivity.py": {
+    "fonction": "run_sensitivity_sweep(n_seeds=5)",
+    "graines": "seeds=0..4 par structure de penalite",
+    "correspond_au_papier": "Section 7.5, paragraphe 'Robustesse du resultat au choix des poids de penalite'",
+    "note": "Verifie que l'equivalence exacte PEG/exhaustive au seuil bayesien optimal tient sur 6 structures de penalite differentes (seuils correspondants 0.57 a 0.89). Robuste pour seuil >= ~0.65 ; ecart marginal en dessous."
+  },
+  "exp3bis_evasive_adversary.py": {
+    "statut": "EXPLORATOIRE, NON CONCLUANT -- ne pas citer comme resultat valide",
+    "fonction": "run_multi_seed(n_seeds=8, use_changepoint_fix=True/False)",
+    "note": "Tentative de reconstruire la Section 7.3bis (jamais implementee auparavant, aucune trace anterieure) pour tester un correctif de detection de rupture (Page-Hinkley) propose lors d'une revue externe. Trois conceptions raisonnables testees (voir Annexe A.2 du papier) ; aucune ne reproduit le resultat original (profondeur adaptative significativement pire, p=0.02). Le resultat original de 7.3bis, cite dans le papier, vient des simulations perdues et n'est pas remis en cause par cet echec de reconstruction. Conserve dans le depot pour transparence sur la tentative, pas comme source des chiffres du papier."
+  },
+  "exp2_quater_group_detection.py": {
+    "statut": "RESOLUTION -- la faiblesse de detection generique de coalition (7.2) est resolue par cette extension",
+    "fonction": "run_multi_seed(n_seeds=8) + scenarios de robustesse (n=100/frac=0.08, frac=0.20)",
+    "graines": "seeds=0..7 (scenario principal) ; seeds=0..4 (2 scenarios de robustesse)",
+    "correspond_au_papier": "Section 7.2quater",
+    "note": "Detection par consensus de groupe : composantes connexes du graphe de correlation (rho_seed=0.25) comme groupes candidats, puis statistique de consensus (correlation leave-one-out avec la moyenne du groupe) plutot qu'une correlation par paire isolee. F1=1.00 (precision et rappel parfaits), verifie exact -- pas seulement le F1 final -- sur 18 graines au total, 3 scenarios de population differents. Resout entierement le critere de refutation initial (rappel <70%) que le mecanisme par paire isolee (exp2_coalition.py) ne satisfaisait pas."
+  },
+  "exp3ter_nested_belief.py": {
+    "statut": "SUPERSEDEE par exp3ter_nested_belief_v2.py -- conservee pour transparence, PAS la source des chiffres du papier",
+    "fonction": "run_multi_seed (10 graines)",
+    "note": "Premiere tentative de validation de la Definition 8 (croyance emboitee bornee a l'ordre 2). Basculement aleatoire de verite terrain -- dissociation trop faible entre 1er et 2e ordre (PEG-1=0.820 vs 0.821 sur les cas cibles, pas de signal exploitable). Voir exp3ter_nested_belief_v2.py pour la version qui a fonctionne."
+  },
+  "exp3ter_nested_belief_v2.py": {
+    "statut": "Source des chiffres cites en Section 7.12ter du papier",
+    "fonction": "run_multi_seed(n_seeds=15)",
+    "graines": "seeds=0..14, par configuration (baseline, peg1, peg2, peg2_v2, adaptive, adaptive_v2)",
+    "correspond_au_papier": "Section 7.12ter, Definition 8",
+    "note": "Scenario ancre sur l'adversaire informe de la Section 7.12 (transition haut->bas plutot que basculement aleatoire). Produit une vraie dissociation premier/second ordre : PEG-1=0.355+/-0.040 vs PEG-2=0.858+/-0.031 sur le cas cible (adversaire evasif), avec un test de falsification (pic de bruit) que PEG-2 seul echoue (0.592) mais que l'adaptatif attenue (0.697, TPR_esc=28.8%, FPR_esc=14.3%). Inclut aussi un detecteur de rupture par rapport de vraisemblance (configs peg2_v2/adaptive_v2) teste et rejete : degrade la falsification (0.375-0.463) sans gain net, probablement du a un effet de comparaisons multiples (recherche du meilleur point de coupure parmi de nombreux candidats)."
+  }
+}

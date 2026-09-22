@@ -1,0 +1,188 @@
+{
+  "exp1_width_regimes": {
+    "n_seeds": 10,
+    "slopes": {
+      "bounded": {
+        "mean": 1.076,
+        "std": 0.358
+      },
+      "density": {
+        "mean": 2.087,
+        "std": 0.329
+      }
+    }
+  },
+  "exp2_coalition_detection": {
+    "n_seeds": 5,
+    "f1_mean": 0.3529272567312408,
+    "f1_std": 0.04420196220137386
+  },
+  "exp2bis_confusion": {
+    "n_seeds": 8,
+    "fpr_no_shock_mean": 0.07267156862745099,
+    "fpr_no_shock_std": 0.030040456393926822,
+    "fpr_shock_mean": 0.5330065359477124,
+    "fpr_shock_std": 0.053634111975946974
+  },
+  "exp3_adaptive_depth": {
+    "n_seeds": 5,
+    "beta_mean": 0.7678993110009814,
+    "beta_std": 0.010787130431017172
+  },
+  "exp4_alignment": {
+    "n_seeds": 5,
+    "rho_mean": 0.6182604717768673,
+    "rho_std": 0.006457555499355955
+  },
+  "exp5_exhaustive_baseline": {
+    "n_seeds": 5,
+    "by_n": {
+      "20": {
+        "peg_cost": 21.320833333333333,
+        "exh_cost": 160.0,
+        "peg_util": 0.2470260416666667,
+        "exh_util": 0.21569791666666668
+      },
+      "50": {
+        "peg_cost": 55.50083333333333,
+        "exh_cost": 400.0,
+        "peg_util": 0.6177416666666667,
+        "exh_util": 0.5391354166666666
+      },
+      "100": {
+        "peg_cost": 114.10333333333334,
+        "exh_cost": 800.0,
+        "peg_util": 0.7595291666666666,
+        "exh_util": 0.7371052083333334
+      },
+      "150": {
+        "peg_cost": 166.55583333333334,
+        "exh_cost": 1200.0,
+        "peg_util": 0.5652131944444445,
+        "exh_util": 0.5177743055555556
+      },
+      "200": {
+        "peg_cost": 239.44416666666666,
+        "exh_cost": 1600.0,
+        "peg_util": 0.6755994791666667,
+        "exh_util": 0.6196927083333332
+      }
+    },
+    "note": "utility function corrected this campaign: genuine per-agent Bayesian posterior classification, see README Note 2"
+  },
+  "exp6_ablation": {
+    "n_seeds": 5,
+    "isolated_so": 1.0,
+    "isolated_full": 1.0,
+    "coalition_so": 0.9582352941176471,
+    "coalition_full": 1.0
+  },
+  "exp8_tomnet_comparison": {
+    "n_seeds": 5,
+    "peg_util_mean": 0.7600470588235295,
+    "peg_util_std": 0.06211658755780931,
+    "implicit_util_mean": 0.7987823529411766,
+    "implicit_util_std": 0.1385950882156675
+  },
+  "exp9_ipomdp_n18": {
+    "n_seeds": 10,
+    "peg_util_mean": -0.458611111111111,
+    "peg_util_std": 0.2636695360264341,
+    "ipomdp_util_mean": -0.4684027777777778,
+    "ipomdp_util_std": 0.3462904357112031
+  },
+  "exp10_magent2": {
+    "n_seeds": 5,
+    "status": "ran",
+    "unsynchronized": {
+      "recall_mean": 1.0,
+      "recall_std": 0.0,
+      "fpr_mean": 0.6220289855072465,
+      "fpr_std": 0.06268111753370478,
+      "correlation_mean": -0.01599537039255525,
+      "correlation_std": 0.05862941216355749
+    },
+    "synchronized": {
+      "recall_mean": 0.9721739130434781,
+      "recall_std": 0.017900750906254658,
+      "fpr_mean": 0.6503623188405798,
+      "fpr_std": 0.049882238975164396,
+      "correlation_mean": 0.2704327901990646,
+      "correlation_std": 0.14032128963327953
+    }
+  },
+  "exp11_burst_decision": {
+    "n_reps": 10,
+    "windowed_mean_util": -3.0,
+    "windowed_mean_std": 0.0,
+    "burst_conditioned_util": 10.0,
+    "burst_conditioned_std": 0.0,
+    "recall_by_desync_spread": {
+      "0": 1.0,
+      "1": 0.8625,
+      "2": 0.7375,
+      "3": 0.75,
+      "5": 0.6625
+    }
+  },
+  "exp11_burst_decision_full": {
+    "n_seeds": 10,
+    "recall_coalition": {
+      "mean_condition": 0.0,
+      "burst_condition": 0.9625,
+      "burst_std": 0.057282196186948006
+    },
+    "recall_isolated": {
+      "mean_condition": 1.0,
+      "burst_condition": 1.0
+    },
+    "fpr": {
+      "mean_condition": 0.0,
+      "burst_condition": 0.0
+    },
+    "utility": {
+      "mean_condition": 0.7,
+      "burst_condition": 1.95125,
+      "burst_std": 0.07446685504303244
+    }
+  },
+  "exp12_sensitivity": {
+    "status": "see exp12_sensitivity_adversarial.py raw output",
+    "note": "single-seed hyperparameter sweeps as in the paper; run `python3 experiments/exp12_sensitivity_adversarial.py` directly for the full sweep table"
+  },
+  "exp7_12bis_order_allocation": {
+    "n_seeds": 20,
+    "recall_k1_naif": {
+      "mean": 0.9,
+      "std": 0.10897247358851685
+    },
+    "recall_k1_camo": {
+      "mean": 1.0,
+      "std": 0.0
+    },
+    "recall_k2_naif": {
+      "mean": 0.0125,
+      "std": 0.037500000000000006
+    },
+    "recall_k2_camo": {
+      "mean": 1.0,
+      "std": 0.0
+    },
+    "fpr_k1": {
+      "mean": 0.22890625,
+      "std": 0.048982568248178864
+    },
+    "fpr_k2": {
+      "mean": 0.00546875,
+      "std": 0.007452650011069888
+    },
+    "promotion_rate": {
+      "mean": 0.10562500000000001,
+      "std": 0.006218671481916374
+    }
+  },
+  "_meta": {
+    "elapsed_seconds": 200.2,
+    "note": "Generated by run_all.py -- see README.md for the exact seed used per experiment and known discrepancies with the original (unrecovered) simulations."
+  }
+}
